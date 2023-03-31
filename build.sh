@@ -1,3 +1,4 @@
 #!/bin/bash
-VERSION=$1
-docker build -t default_memory_size -f "Dockerfile-jre${VERSION}" .
+VENDOR=$1
+VERSION=$2
+docker build -t default_memory_size --build-arg VERSION=$VERSION -f "Dockerfile-${VENDOR}" .

@@ -1,5 +1,7 @@
-FROM eclipse-temurin:17-jre
-ENTRYPOINT java -XX:+UnlockDiagnosticVMOptions -XX:+PrintFlagsFinal -version 2>/dev/null \
+ARG VERSION=17
+FROM registry.access.redhat.com/ubi8/openjdk-${VERSION}:latest
+ENTRYPOINT java -version 2>&1 | grep "Environment" | cut -d ' ' -f4 \
+    && java -XX:+UnlockDiagnosticVMOptions -XX:+PrintFlagsFinal -version 2>/dev/null \
     | grep -Ewi "MaxHeapSize|maxram" \ 
     | awk '{ if($4 >= 1024*1024*1024) print $2, $3, $4/(1024*1024*1024) " GB"; else if($4 >= 1024*1024) print $2, $3, $4/(1024*1024) " MB"; else if($4 >= 1024) print $2, $3, $4/1024 " KB"; else print $2, $3, $4 " Bytes"; }' \
     && java -XX:+UnlockDiagnosticVMOptions -XX:+PrintFlagsFinal -version 2>/dev/null \
